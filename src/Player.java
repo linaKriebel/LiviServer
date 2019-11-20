@@ -1,3 +1,4 @@
+import java.io.*;
 import java.net.Socket;
 
 public class Player implements Runnable {
@@ -12,7 +13,6 @@ public class Player implements Runnable {
 
     @Override
     public void run() {
-
     }
 
     public Socket getSocket() {

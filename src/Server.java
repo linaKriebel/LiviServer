@@ -1,4 +1,4 @@
-import java.io.IOException;
+import java.io.*;
 import java.net.ServerSocket;
 import java.util.ArrayList;
 import java.util.List;
@@ -14,20 +14,31 @@ public class Server {
 
         try {
             server = new ServerSocket(port);
-            for (int i = 0; i<=2; i++) { //max 3 clients can connect to server
-                Player player = new Player(server.accept(), i);
-                System.out.println("connected");
-                int message = player.getSocket().getInputStream().read();
-                player.getSocket().getOutputStream().write(2*message);
+            while(true) {
+            Player player = new Player(server.accept(), 1);
 
-                players.add(player);
+            //receive message from client
+            InputStream is = player.getSocket().getInputStream();
+            InputStreamReader isr = new InputStreamReader(is);
+            BufferedReader br = new BufferedReader(isr);
+            String receivedMessage = br.readLine();
+            System.out.println("Message received from client is " + receivedMessage);
+
+            //Send response back to the client
+            String sendMessage = "Hello Client" + "\n";
+            OutputStream os = player.getSocket().getOutputStream();
+            OutputStreamWriter osw = new OutputStreamWriter(os);
+            BufferedWriter bw = new BufferedWriter(osw);
+            bw.write(sendMessage);
+            System.out.println("Message sent to the client is " + sendMessage);
+            bw.flush();
+
+            players.add(player);
+            System.out.println("connected");
+
             }
         } catch (IOException e) {
             e.printStackTrace();
         }
-    }
-
-    private void start(){
-
     }
 }
