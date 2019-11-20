@@ -14,8 +14,8 @@ public class Server {
 
         try {
             server = new ServerSocket(port);
-            while(true) {
             Player player = new Player(server.accept(), 1);
+            while(true) {
 
             //receive message from client
             InputStream is = player.getSocket().getInputStream();
@@ -25,17 +25,16 @@ public class Server {
             System.out.println("Message received from client is " + receivedMessage);
 
             //Send response back to the client
-            String sendMessage = "Hello Client" + "\n";
+/*            String sendMessage = "Hello Client" + "\n";
             OutputStream os = player.getSocket().getOutputStream();
             OutputStreamWriter osw = new OutputStreamWriter(os);
             BufferedWriter bw = new BufferedWriter(osw);
             bw.write(sendMessage);
             System.out.println("Message sent to the client is " + sendMessage);
-            bw.flush();
+            bw.flush();*/
 
             players.add(player);
             System.out.println("connected");
-
             }
         } catch (IOException e) {
             e.printStackTrace();
