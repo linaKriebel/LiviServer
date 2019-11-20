@@ -4,11 +4,19 @@ import java.net.Socket;
 public class Player implements Runnable {
 
     private Socket socket;
+    private Server server;
     private int id;
+    private OutputStream os;
+    private OutputStreamWriter osw;
+    private BufferedWriter bw;
 
-    public Player(Socket socket, int id) {
+    public Player(Server server, Socket socket, int id) throws IOException {
+        this.server = server;
         this.socket = socket;
         this.id = id;
+        os = socket.getOutputStream();
+        osw = new OutputStreamWriter(os);
+        bw = new BufferedWriter(osw);
     }
 
     @Override
@@ -21,26 +29,23 @@ public class Player implements Runnable {
                 InputStreamReader isr = new InputStreamReader(is);
                 BufferedReader br = new BufferedReader(isr);
                 String receivedMessage = br.readLine();
-                System.out.println("Message received from client is " + receivedMessage);
-
-                String sendMessage = "ok" + "\n";
-
-                if (receivedMessage.equals("down")) {
-                    sendMessage = "not ok" + "\n";
-                }
-                //Send response back to the client
-                OutputStream os = socket.getOutputStream();
-                OutputStreamWriter osw = new OutputStreamWriter(os);
-                BufferedWriter bw = new BufferedWriter(osw);
-                bw.write(sendMessage);
-                System.out.println("Message sent to the client is " + sendMessage);
-                bw.flush();
+                server.handle(receivedMessage, id);
+                System.out.println( receivedMessage);
             } catch (IOException e) {
                 e.printStackTrace();
             }
         }
     }
 
+    public void sendMessage(String sendMessage) throws IOException {
+        //Send response back to the client
+        bw.write(sendMessage + "\n");
+        bw.flush();
+    }
+
+    public int getId(){
+        return id;
+    }
 
     public Socket getSocket() {
         return socket;

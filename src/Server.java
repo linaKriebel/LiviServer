@@ -18,13 +18,25 @@ public class Server {
             server = new ServerSocket(port);
             ExecutorService executorService = Executors.newFixedThreadPool(200);
             while (true) {
-                executorService.execute(new Player(server.accept(), 1));
-                executorService.execute(new Player(server.accept(), 2));
+                Player playerOne = new Player(this, server.accept(), 1);
+                Player playerTwo = new Player(this, server.accept(), 2);
+                executorService.execute(playerOne);
+                executorService.execute(playerTwo);
+                players.add(playerOne);
+                players.add(playerTwo);
             }
-
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
 
+    public synchronized void handle(String message, int id) {
+        for (Player player : players) {
+            try {
+                player.sendMessage("Client with id " + id + " moved " + message);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
     }
 }
