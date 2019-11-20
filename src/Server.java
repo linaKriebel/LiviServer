@@ -24,14 +24,19 @@ public class Server {
             String receivedMessage = br.readLine();
             System.out.println("Message received from client is " + receivedMessage);
 
+            String sendMessage = "ok" + "\n";
+
+            if (receivedMessage.equals("down")) {
+                sendMessage = "not ok" + "\n";
+            }
+
             //Send response back to the client
-/*            String sendMessage = "Hello Client" + "\n";
             OutputStream os = player.getSocket().getOutputStream();
             OutputStreamWriter osw = new OutputStreamWriter(os);
             BufferedWriter bw = new BufferedWriter(osw);
             bw.write(sendMessage);
             System.out.println("Message sent to the client is " + sendMessage);
-            bw.flush();*/
+            bw.flush();
 
             players.add(player);
             System.out.println("connected");
