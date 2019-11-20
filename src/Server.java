@@ -33,7 +33,7 @@ public class Server {
     public synchronized void handle(String message, int id) {
         for (Player player : players) {
             try {
-                player.sendMessage("Client with id " + id + " moved " + message);
+                player.sendMessage(id + " " + message);
             } catch (IOException e) {
                 e.printStackTrace();
             }

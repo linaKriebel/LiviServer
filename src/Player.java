@@ -30,7 +30,7 @@ public class Player implements Runnable {
                 BufferedReader br = new BufferedReader(isr);
                 String receivedMessage = br.readLine();
                 server.handle(receivedMessage, id);
-                System.out.println( receivedMessage);
+                System.out.println(receivedMessage);
             } catch (IOException e) {
                 e.printStackTrace();
             }
