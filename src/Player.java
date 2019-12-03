@@ -1,5 +1,6 @@
 import java.io.*;
 import java.net.Socket;
+import java.util.logging.Logger;
 
 public class Player implements Runnable {
 
@@ -9,6 +10,7 @@ public class Player implements Runnable {
     private OutputStream os;
     private OutputStreamWriter osw;
     private BufferedWriter bw;
+    Logger logger = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
 
     public Player(Server server, Socket socket, int id) throws IOException {
         this.server = server;
@@ -30,9 +32,15 @@ public class Player implements Runnable {
                 BufferedReader br = new BufferedReader(isr);
                 String receivedMessage = br.readLine();
                 server.handle(receivedMessage, id);
-                System.out.println(receivedMessage);
-            } catch (IOException e) {
-                e.printStackTrace();
+               // System.out.println(receivedMessage);
+            } catch (Exception e) {
+                logger.info("Player" + id + " disconnected.");
+                try {
+                    socket.close();
+                } catch (IOException ex) {
+                    ex.printStackTrace();
+                }
+                break;
             }
         }
     }
@@ -41,10 +49,6 @@ public class Player implements Runnable {
         //Send response back to the client
         bw.write(sendMessage + "\n");
         bw.flush();
-    }
-
-    public int getId(){
-        return id;
     }
 
     public Socket getSocket() {
