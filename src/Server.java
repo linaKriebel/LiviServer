@@ -37,6 +37,13 @@ public class Server {
             } catch (IOException e) {
                 e.printStackTrace();
             }
+            finally {
+                try {
+                    player.getSocket().close();
+                } catch ( Exception e) {
+                    e.printStackTrace();
+                }
+            }
         }
     }
 }

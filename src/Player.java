@@ -35,11 +35,6 @@ public class Player implements Runnable {
                // System.out.println(receivedMessage);
             } catch (Exception e) {
                 logger.info("Player" + id + " disconnected.");
-                try {
-                    socket.close();
-                } catch (IOException ex) {
-                    ex.printStackTrace();
-                }
                 break;
             }
         }
