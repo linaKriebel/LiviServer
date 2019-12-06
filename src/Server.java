@@ -9,6 +9,7 @@ public class Server {
 
     private ServerSocket server;
     private List<Player> players;
+    private World world;
 
 
     public Server(int port) {
@@ -16,6 +17,7 @@ public class Server {
 
         try {
             server = new ServerSocket(port);
+            world = new World();
             ExecutorService executorService = Executors.newFixedThreadPool(200);
             while (true) {
                 Player playerOne = new Player(this, server.accept(), 1);
@@ -31,27 +33,15 @@ public class Server {
     }
 
     public synchronized void handle(String message, int id) {
+        Coordinate coordinate = world.processMove(id, message);
+
         for (Player player : players) {
             try {
                 //decide what to do
-
-
-                player.sendMessage(id + " " + message);
+                player.sendMessage(id, coordinate);
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            finally {
-                try {
-                    player.getSocket().close();
-                } catch ( Exception e) {
-                    e.printStackTrace();
-                }
-            }
         }
-    }
-
-    private void movementValidator(String message, int id){
-        // validate the movement
-
     }
 }

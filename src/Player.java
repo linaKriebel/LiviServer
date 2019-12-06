@@ -35,17 +35,18 @@ public class Player implements Runnable {
                 BufferedReader br = new BufferedReader(isr);
                 String receivedMessage = br.readLine();
                 server.handle(receivedMessage, id);
-               // System.out.println(receivedMessage);
-            } catch (Exception e) {
+                System.out.println(receivedMessage);
+            } catch (IOException e) {
                 logger.info("Player" + id + " disconnected.");
-                break;
+
             }
         }
     }
 
-    public void sendMessage(String sendMessage) throws IOException {
+    public void sendMessage(int id, Coordinate coordinate) throws IOException {
         //Send response back to the client
-        bw.write(sendMessage + "\n");
+        String send = "MOVE PLAYER " + id + " " + coordinate.x + " " + coordinate.y;
+        bw.write(send + "\n");
         bw.flush();
     }
 
