@@ -33,6 +33,9 @@ public class Server {
     public synchronized void handle(String message, int id) {
         for (Player player : players) {
             try {
+                //decide what to do
+
+
                 player.sendMessage(id + " " + message);
             } catch (IOException e) {
                 e.printStackTrace();
@@ -45,5 +48,10 @@ public class Server {
                 }
             }
         }
+    }
+
+    private void movementValidator(String message, int id){
+        // validate the movement
+
     }
 }

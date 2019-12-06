@@ -4,13 +4,16 @@ import java.util.logging.Logger;
 
 public class Player implements Runnable {
 
+    private int id;
+    private Coordinate position;
+
     private Socket socket;
     private Server server;
-    private int id;
     private OutputStream os;
     private OutputStreamWriter osw;
     private BufferedWriter bw;
     Logger logger = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
+
 
     public Player(Server server, Socket socket, int id) throws IOException {
         this.server = server;
