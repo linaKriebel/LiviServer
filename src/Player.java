@@ -5,7 +5,7 @@ import java.util.logging.Logger;
 public class Player implements Runnable {
 
     private int id;
-    private Coordinate position;
+    private Field position;
 
     private Socket socket;
     private Server server;
@@ -43,7 +43,7 @@ public class Player implements Runnable {
         }
     }
 
-    public void sendMessage(int id, Coordinate coordinate) throws IOException {
+    public void sendMessage(int id, Field coordinate) throws IOException {
         //Send response back to the client
         String send = "MOVE PLAYER " + id + " " + coordinate.x + " " + coordinate.y;
         bw.write(send + "\n");

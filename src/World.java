@@ -20,21 +20,23 @@ public class World {
     }
 
 
-    public Coordinate processMove(int playerId, String direction) {
+    public Field processMove(int playerId, String direction) {
         GameItem player = getGameItem(ItemType.PLAYER, playerId);
-        Direction dir = Direction.valueOf(direction);
+        Direction dir = Direction.valueOf(direction.toUpperCase());
 
-        Coordinate currentPosition = getPosition(ItemType.PLAYER, playerId); //the position the player is currently on
-        Coordinate newPosition = getNextField(currentPosition, dir); //the position the player will move to
+        Field currentPosition = getPosition(ItemType.PLAYER, playerId); //the position the player is currently on
+        Field newPosition = getNextField(currentPosition, dir); //the position the player will move to
 
         return move(currentPosition, newPosition, dir, player);
         //TODO register player event
     }
 
-    private Coordinate move(Coordinate currentPlayerPosition, Coordinate newPlayerPosition, Direction direction, GameItem player){
-        Coordinate playerPosition = null;
+    private Field move(Field currentPlayerPosition, Field newPlayerPosition, Direction direction, GameItem player){
+        Field playerPosition = null;
 
         if(newPlayerPosition != null) {
+            System.out.println("Next field: " + newPlayerPosition.x + ", " + newPlayerPosition.y);
+
             //next field exists
 
             if (gameField[newPlayerPosition.x][newPlayerPosition.y] != null) {
@@ -50,7 +52,7 @@ public class World {
                 }
 
                 if (type.equals(ItemType.BALL)) {
-                    Coordinate potentialBallPosition = getNextField(newPlayerPosition, direction);
+                    Field potentialBallPosition = getNextField(newPlayerPosition, direction);
 
                     //check if the ball would be moved out of the gameField
                     if (potentialBallPosition != null) {
@@ -78,6 +80,8 @@ public class World {
                 playerPosition = newPlayerPosition;
             }
         } else {
+            System.out.println("Next field: border");
+
             //player stands at the border and can not move
             playerPosition = currentPlayerPosition;
         }
@@ -86,17 +90,17 @@ public class World {
         return playerPosition;
     }
 
-    private void updateGameField(Coordinate oldPos, Coordinate newPos, GameItem object) {
+    private void updateGameField(Field oldPos, Field newPos, GameItem object) {
         gameField[oldPos.x][oldPos.y] = null;
         gameField[newPos.x][newPos.y] = object;
     }
 
-    private Coordinate getPosition(ItemType type, int id) {
+    private Field getPosition(ItemType type, int id) {
         for (int x = 0; x < width; x++) {
             for (int y = 0; y < height; y++) {
                 if (gameField[x][y] != null) {
                     if (gameField[x][y].getType() == type && gameField[x][y].getId() == id) {
-                        return new Coordinate(x, y);
+                        return new Field(x, y);
                     }
                 }
             }
@@ -121,21 +125,21 @@ public class World {
         return null;
     }
 
-    private Coordinate getNextField(Coordinate position, Direction direction){
-        Coordinate nextField = null;
+    private Field getNextField(Field position, Direction direction){
+        Field nextField = null;
 
         switch(direction){
             case LEFT:
-                if (position.x > 0) nextField = new Coordinate(position.x -1, position.y);
+                if (position.x > 0) nextField = new Field(position.x -1, position.y);
                 break;
             case RIGHT:
-                if (position.x < width-1) nextField = new Coordinate(position.x +1, position.y);
+                if (position.x < width-1) nextField = new Field(position.x +1, position.y);
                 break;
             case UP:
-                if (position.y > height-1) nextField = new Coordinate(position.x, position.y -1);
+                if (position.y > 0) nextField = new Field(position.x, position.y -1);
                 break;
             case DOWN:
-                if (position.y > 0) nextField = new Coordinate(position.x, position.y +1);
+                if (position.y < height-1) nextField = new Field(position.x, position.y +1);
                 break;
         }
         //return null, if the next field would be outside the gameField

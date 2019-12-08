@@ -21,11 +21,11 @@ public class Server {
             ExecutorService executorService = Executors.newFixedThreadPool(200);
             while (true) {
                 Player playerOne = new Player(this, server.accept(), 1);
-                Player playerTwo = new Player(this, server.accept(), 2);
+                //Player playerTwo = new Player(this, server.accept(), 2);
                 executorService.execute(playerOne);
-                executorService.execute(playerTwo);
+                //executorService.execute(playerTwo);
                 players.add(playerOne);
-                players.add(playerTwo);
+                //players.add(playerTwo);
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -33,7 +33,7 @@ public class Server {
     }
 
     public synchronized void handle(String message, int id) {
-        Coordinate coordinate = world.processMove(id, message);
+        Field coordinate = world.processMove(id, message);
 
         for (Player player : players) {
             try {
