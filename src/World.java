@@ -2,8 +2,8 @@ import java.util.HashMap;
 
 public class World {
 
-    private final int width = 10;
-    private final int height = 10;
+    private final int width = 20;
+    private final int height = 20;
 
     private GameItem[][] gameField ; //in world grid coordinates
 
@@ -16,11 +16,14 @@ public class World {
         GameItem ball1 = new GameItem(ItemType.BALL, 1);
         GameItem ball2 = new GameItem(ItemType.BALL, 2);
 
+        GameItem obstacle1 = new GameItem(ItemType.OBSTACLE, 1);
+
         //set up the level
         gameField[2][2] = player1; //starting position for player 1
         gameField[6][6] = player2; //starting position for player 2
         gameField[7][8] = ball1;
         gameField[3][3] = ball2;
+        gameField[5][5] = obstacle1;
     }
 
 
