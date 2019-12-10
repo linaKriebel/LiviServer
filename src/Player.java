@@ -43,9 +43,10 @@ public class Player implements Runnable {
         }
     }
 
-    public void sendMessage(int id, Field coordinate) throws IOException {
+    public void sendMessage(Field coordinate, GameItem gameItem) throws IOException {
         //Send response back to the client
-        String send = "MOVE PLAYER " + id + " " + coordinate.x + " " + coordinate.y;
+        String send = "MOVE " + gameItem.getType() + " " + gameItem.getId() + " " + coordinate.x + " " + coordinate.y;
+        System.out.println(send);
         bw.write(send + "\n");
         bw.flush();
     }

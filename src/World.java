@@ -1,3 +1,5 @@
+import java.util.HashMap;
+
 public class World {
 
     private final int width = 10;
@@ -11,27 +13,30 @@ public class World {
         GameItem player1 = new GameItem(ItemType.PLAYER, 1);
         GameItem player2 = new GameItem(ItemType.PLAYER, 2);
 
-        GameItem ball = new GameItem(ItemType.BALL, 1);
+        GameItem ball1 = new GameItem(ItemType.BALL, 1);
+        GameItem ball2 = new GameItem(ItemType.BALL, 2);
 
         //set up the level
         gameField[2][2] = player1; //starting position for player 1
         gameField[6][6] = player2; //starting position for player 2
-        gameField[7][8] = ball;
+        gameField[7][8] = ball1;
+        gameField[3][3] = ball2;
     }
 
 
-    public Field processMove(int playerId, String direction) {
+    public HashMap<GameItem, Field> processMove(int playerId, String direction) {
         GameItem player = getGameItem(ItemType.PLAYER, playerId);
         Direction dir = Direction.valueOf(direction.toUpperCase());
 
         Field currentPosition = getPosition(ItemType.PLAYER, playerId); //the position the player is currently on
         Field newPosition = getNextField(currentPosition, dir); //the position the player will move to
 
-        return move(currentPosition, newPosition, dir, player);
         //TODO register player event
+        return move(currentPosition, newPosition, dir, player);
     }
 
-    private Field move(Field currentPlayerPosition, Field newPlayerPosition, Direction direction, GameItem player){
+    private HashMap<GameItem,Field> move(Field currentPlayerPosition, Field newPlayerPosition, Direction direction, GameItem player){
+        HashMap<GameItem, Field> updatedPositions = new HashMap<>();
         Field playerPosition = null;
 
         if(newPlayerPosition != null) {
@@ -65,8 +70,9 @@ public class World {
                             //field is free, move ball and player to their new positions
                             GameItem ball = gameField[newPlayerPosition.x][newPlayerPosition.y];
                             playerPosition = newPlayerPosition;
-                            //TODO register ball event
                             updateGameField(newPlayerPosition, potentialBallPosition, ball);
+                            //TODO register ball event
+                            updatedPositions.put(ball, potentialBallPosition);
                         }
                     }
                 }
@@ -87,7 +93,9 @@ public class World {
         }
 
         updateGameField(currentPlayerPosition, playerPosition, player);
-        return playerPosition;
+        updatedPositions.put(player, playerPosition);
+
+        return updatedPositions;
     }
 
     private void updateGameField(Field oldPos, Field newPos, GameItem object) {
