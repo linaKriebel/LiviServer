@@ -32,7 +32,7 @@ public class World {
         Direction dir = Direction.valueOf(direction.toUpperCase());
 
         Field currentPosition = getPosition(ItemType.PLAYER, playerId); //the position the player is currently on
-        Field newPosition = getNextField(currentPosition, dir); //the position the player will move to
+        Field newPosition = getNextField(currentPosition, dir); //the next field in the given direction, null if outside the gameField
 
         //TODO register player event
         return move(currentPosition, newPosition, dir, player);
@@ -77,6 +77,9 @@ public class World {
                             //TODO register ball event
                             updatedPositions.put(ball, potentialBallPosition);
                         }
+                    } else {
+                        //ball can not be moved --> player can not move either
+                        playerPosition = currentPlayerPosition;
                     }
                 }
 
