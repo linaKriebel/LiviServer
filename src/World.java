@@ -10,6 +10,7 @@ public class World {
     public World() {
         gameField = new GameItem[width][height];
 
+        GameItem ai = new GameItem(ItemType.PLAYER, 0);
         GameItem player1 = new GameItem(ItemType.PLAYER, 1);
         GameItem player2 = new GameItem(ItemType.PLAYER, 2);
 
@@ -19,8 +20,9 @@ public class World {
         GameItem obstacle1 = new GameItem(ItemType.OBSTACLE, 1);
 
         //set up the level
-        gameField[2][2] = player1; //starting position for player 1
-        gameField[6][6] = player2; //starting position for player 2
+        gameField[0][0] = ai;
+        gameField[2][2] = player1; //TODO randomize starting position for player 1
+        gameField[6][6] = player2; //TODO randomize starting position for player 2
         gameField[7][8] = ball1;
         gameField[3][3] = ball2;
         gameField[5][5] = obstacle1;
@@ -109,7 +111,7 @@ public class World {
         gameField[newPos.x][newPos.y] = object;
     }
 
-    private Field getPosition(ItemType type, int id) {
+    public Field getPosition(ItemType type, int id) {
         for (int x = 0; x < width; x++) {
             for (int y = 0; y < height; y++) {
                 if (gameField[x][y] != null) {

@@ -15,12 +15,19 @@ public class Server {
 
     public Server(int port) {
         players = new ArrayList<>();
+        world = new World();
 
         try {
             server = new ServerSocket(port);
-            world = new World();
+
             ExecutorService executorService = Executors.newFixedThreadPool(200);
             while (true) {
+
+                //Ai
+                AI ai = new AI(this);
+                executorService.execute(ai);
+
+                //players
                 Player playerOne = new Player(this, server.accept(), 1);
                 //Player playerTwo = new Player(this, server.accept(), 2);
                 executorService.execute(playerOne);
@@ -53,6 +60,10 @@ public class Server {
                 e.printStackTrace();
             }
         }
+    }
+
+    public World getWorld() {
+        return world;
     }
 
 }
