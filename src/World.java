@@ -1,3 +1,4 @@
+import java.awt.*;
 import java.util.HashMap;
 
 public class World {
@@ -17,10 +18,30 @@ public class World {
         GameItem ball1 = new GameItem(ItemType.BALL, 1);
         GameItem ball2 = new GameItem(ItemType.BALL, 2);
 
+        int idCount = 0;
+        for(int x=0; x<width; x++){
+            GameItem obstacle1 = new GameItem(ItemType.OBSTACLE, idCount);
+            idCount++;
+            GameItem obstacle2 = new GameItem(ItemType.OBSTACLE, idCount);
+            idCount++;
+
+            gameField[x][0] = obstacle1;
+            gameField[x][height-1] = obstacle2;
+        }
+
+        for(int y=0; y<height; y++){
+            GameItem obstacle1 = new GameItem(ItemType.OBSTACLE, idCount);
+            idCount++;
+            GameItem obstacle2 = new GameItem(ItemType.OBSTACLE, idCount);
+            idCount++;
+
+            gameField[0][y] = obstacle1;
+            gameField[width-1][y] = obstacle2;
+        }
         GameItem obstacle1 = new GameItem(ItemType.OBSTACLE, 1);
 
         //set up the level
-        gameField[0][0] = ai;
+        gameField[1][1] = ai;
         gameField[2][2] = player1; //TODO randomize starting position for player 1
         gameField[6][6] = player2; //TODO randomize starting position for player 2
         gameField[7][8] = ball1;
@@ -36,7 +57,6 @@ public class World {
         Field currentPosition = getPosition(ItemType.PLAYER, playerId); //the position the player is currently on
         Field newPosition = getNextField(currentPosition, dir); //the next field in the given direction, null if outside the gameField
 
-        //TODO register player event
         return move(currentPosition, newPosition, dir, player);
     }
 
@@ -76,7 +96,7 @@ public class World {
                             GameItem ball = gameField[newPlayerPosition.x][newPlayerPosition.y];
                             playerPosition = newPlayerPosition;
                             updateGameField(newPlayerPosition, potentialBallPosition, ball);
-                            //TODO register ball event
+
                             updatedPositions.put(ball, potentialBallPosition);
                         }
                     } else {
