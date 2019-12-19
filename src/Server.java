@@ -1,3 +1,8 @@
+import models.Command;
+import models.Field;
+import models.GameEvent;
+import models.GameItem;
+
 import java.io.*;
 import java.net.ServerSocket;
 import java.util.ArrayList;
@@ -41,20 +46,17 @@ public class Server {
     }
 
     public synchronized void handle(String message, int id) {
-        HashMap<GameItem, Field> coordinates = world.processMove(id, message);
-        List gameItems = new ArrayList(coordinates.keySet());
+        List<GameEvent> events = world.processMove(id, message);
+        String messageToSent;
         for (Player player : players) {
             try {
-                //TODO: check how this can be done more generic, without being dependent on indices
-                if (gameItems.size() < 2 ) {
-                    Object playerInfo = gameItems.get(0);
-                    player.sendMessage(coordinates.get(playerInfo), (GameItem) playerInfo);
-                } else {
-                    Object ballInfo = gameItems.get(0);
-                    player.sendMessage(coordinates.get(ballInfo), (GameItem) ballInfo);
-
-                    Object playerInfo = gameItems.get(1);
-                    player.sendMessage(coordinates.get(playerInfo), (GameItem) playerInfo);
+                for (GameEvent event : events) {
+                    if (event.getCommand() == Command.MOVE) {
+                        messageToSent = event.getCommand() + " " + event.getItemType() + " " + event.getItemId() + " " + event.getField().x + " " + event.getField().y;
+                    } else {
+                        messageToSent = event.getCommand() + " " + event.getItemType() + " " + event.getItemId();
+                    }
+                    player.sendMessage(messageToSent);
                 }
             } catch (IOException e) {
                 e.printStackTrace();

@@ -1,3 +1,7 @@
+import models.Field;
+import models.GameItem;
+import models.ItemType;
+
 import java.io.*;
 import java.net.Socket;
 import java.util.logging.Logger;
@@ -43,16 +47,10 @@ public class Player implements Runnable {
         }
     }
 
-    public void sendMessage(Field coordinate, GameItem gameItem) throws IOException {
+    public void sendMessage(String message) throws IOException {
         //Send response back to the client
-        String send;
-        if (coordinate != null) {
-            send = "MOVE " + gameItem.getType() + " " + gameItem.getId() + " " + coordinate.x + " " + coordinate.y;
-        } else {
-            send = "REMOVE " + gameItem.getType() + " " + gameItem.getId();
-        }
-        System.out.println(send);
-        bw.write(send + "\n");
+        System.out.println(message);
+        bw.write(message + "\n");
         bw.flush();
     }
 

@@ -1,3 +1,5 @@
+package models;
+
 public class GameItem {
 
     private ItemType type;

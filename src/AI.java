@@ -1,3 +1,7 @@
+import models.Direction;
+import models.Field;
+import models.ItemType;
+
 public class AI implements Runnable {
 
     private Server server;

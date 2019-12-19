@@ -1,3 +1,5 @@
+package models;
+
 public class Field {
 
     public int x;

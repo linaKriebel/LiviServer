@@ -1,5 +1,8 @@
-import java.awt.*;
+import models.*;
+
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 public class World {
 
@@ -55,7 +58,7 @@ public class World {
     }
 
 
-    public HashMap<GameItem, Field> processMove(int playerId, String direction) {
+    public List<GameEvent> processMove(int playerId, String direction) {
         GameItem player = getGameItem(ItemType.PLAYER, playerId);
         Direction dir = Direction.valueOf(direction.toUpperCase());
 
@@ -65,8 +68,8 @@ public class World {
         return move(currentPosition, newPosition, dir, player);
     }
 
-    private HashMap<GameItem,Field> move(Field currentPlayerPosition, Field newPlayerPosition, Direction direction, GameItem player){
-        HashMap<GameItem, Field> updatedPositions = new HashMap<>();
+    private List<GameEvent> move(Field currentPlayerPosition, Field newPlayerPosition, Direction direction, GameItem player){
+        List<GameEvent> gameEvents = new ArrayList<>();
         Field playerPosition = null;
 
         if(newPlayerPosition != null) {
@@ -93,23 +96,30 @@ public class World {
                     if (potentialBallPosition != null) {
                         //ball can be moved, if the field is not occupied
                         GameItem potentialBallField = gameField[potentialBallPosition.x][potentialBallPosition.y];
-                        if ( potentialBallField != null && potentialBallField.getType() != ItemType.HOLE ) {
-                            //field is occupied, player and ball can not be moved
-                            playerPosition = currentPlayerPosition;
-                        } else if (potentialBallField == null){
+                        if ( potentialBallField != null ) {
+
+                            if (potentialBallField.getType() == ItemType.HOLE) {
+                                // delete ball
+                                GameItem ball = gameField[newPlayerPosition.x][newPlayerPosition.y];
+                                updateGameField(newPlayerPosition, potentialBallPosition, null);
+                                playerPosition = newPlayerPosition;
+                                gameEvents.add(new GameEvent(Command.REMOVE, ball.getId(), ball.getType()));
+                                gameEvents.add(new GameEvent(Command.SCORE, player.getId(), player.getType()));
+
+                            } else {
+                                //field is occupied, player and ball can not be moved
+                                playerPosition = currentPlayerPosition;
+
+                            }
+                        }
+
+                        else if (potentialBallField == null){
                             //field is free, move ball and player to their new positions
                             GameItem ball = gameField[newPlayerPosition.x][newPlayerPosition.y];
                             playerPosition = newPlayerPosition;
                             updateGameField(newPlayerPosition, potentialBallPosition, ball);
 
-                            updatedPositions.put(ball, potentialBallPosition);
-                        } else if (potentialBallField.getType() == ItemType.HOLE) {
-                            // delete ball
-                            GameItem ball = gameField[newPlayerPosition.x][newPlayerPosition.y];
-                            updateGameField(newPlayerPosition, potentialBallPosition, null);
-                            playerPosition = newPlayerPosition;
-
-                            updatedPositions.put(ball, null);
+                            gameEvents.add(new GameEvent(Command.MOVE, ball.getId(), ball.getType(), potentialBallPosition));
                         }
                     } else {
                         //ball can not be moved --> player can not move either
@@ -128,9 +138,10 @@ public class World {
         }
 
         updateGameField(currentPlayerPosition, playerPosition, player);
-        updatedPositions.put(player, playerPosition);
+        gameEvents.add(new GameEvent(Command.MOVE , player.getId(), player.getType(), playerPosition));
 
-        return updatedPositions;
+
+        return gameEvents;
     }
 
     private void updateGameField(Field oldPos, Field newPos, GameItem object) {
