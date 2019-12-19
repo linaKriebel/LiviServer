@@ -1,5 +1,5 @@
 public enum ItemType {
 
-    PLAYER, BALL, OBSTACLE
+    PLAYER, BALL, OBSTACLE, HOLE
 
 }
