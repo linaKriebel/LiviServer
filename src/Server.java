@@ -48,8 +48,8 @@ public class Server {
             events.add(new GameEvent(ServerCommand.EXIT, id, ItemType.PLAYER));
         } else if (message == ClientCommand.COUNTDOWN) {
             events.add(new GameEvent(ServerCommand.END));
-            players.clear();
             stopAI();
+            //players.clear(); is that necessary ?
         } else {
             events = world.processMove(id, message);
         }
@@ -85,5 +85,4 @@ public class Server {
         }
         return null;
     }
-
 }
