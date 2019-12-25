@@ -6,16 +6,16 @@ public class AI implements Runnable {
 
     private Server server;
     private final int ID = 0;
+    public volatile boolean running = true;
 
     public AI(Server server){
         this.server = server;
     }
 
-
     @Override
     public void run() {
 
-        while(true){
+        while(running){
             try {
                 Thread.sleep(2000);
             } catch (InterruptedException e) {
@@ -23,7 +23,6 @@ public class AI implements Runnable {
             }
             server.handle(calculateDirection(), ID);
         }
-
     }
 
     private ClientCommand calculateDirection(){

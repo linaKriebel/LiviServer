@@ -15,8 +15,8 @@ public class Server {
     private ServerSocket server;
     private List<Player> players;
     private World world;
-    ExecutorService executorService;
-
+    private AI ai;
+    private ExecutorService executorService;
 
     public Server(int port) {
         players = new ArrayList<>();
@@ -48,9 +48,9 @@ public class Server {
             events.add(new GameEvent(ServerCommand.EXIT, id, ItemType.PLAYER));
         } else if (message == ClientCommand.COUNTDOWN) {
             events.add(new GameEvent(ServerCommand.END));
-            //remove all players
-        }
-        else {
+            players.clear();
+            stopAI();
+        } else {
             events = world.processMove(id, message);
         }
         for (Player player : players) {
@@ -65,15 +65,19 @@ public class Server {
     }
 
     private void startAI() {
-        AI ai = new AI(this);
+        ai = new AI(this);
         executorService.execute(ai);
+    }
+
+    private void stopAI() {
+        ai.running = false;
     }
 
     public World getWorld() {
         return world;
     }
 
-    private Player getPlayerById (int id) {
+    private Player getPlayerById(int id) {
         for (Player player : players) {
             if (player.getId() == id) {
                 return player;
