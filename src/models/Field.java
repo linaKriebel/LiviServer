@@ -1,6 +1,8 @@
 package models;
 
-public class Field {
+import java.io.Serializable;
+
+public class Field implements Serializable {
 
     public int x;
     public int y;

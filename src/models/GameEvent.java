@@ -1,11 +1,17 @@
 package models;
 
-public class GameEvent {
+import java.io.Serializable;
+
+public class GameEvent implements Serializable {
 
     private Command command;
     private int itemId;
     private ItemType itemType;
     private Field field;
+
+    public GameEvent(Command command) {
+        this.command = command;
+    }
 
     public GameEvent(Command command, int itemId, ItemType itemType, Field field) {
         this.command = command;

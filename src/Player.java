@@ -1,4 +1,5 @@
 import models.Field;
+import models.GameEvent;
 import models.GameItem;
 import models.ItemType;
 
@@ -13,7 +14,7 @@ public class Player implements Runnable {
 
     private Socket socket;
     private Server server;
-    private OutputStream os;
+    private ObjectOutputStream os;
     private OutputStreamWriter osw;
     private BufferedWriter bw;
     Logger logger = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
@@ -23,9 +24,7 @@ public class Player implements Runnable {
         this.server = server;
         this.socket = socket;
         this.id = id;
-        os = socket.getOutputStream();
-        osw = new OutputStreamWriter(os);
-        bw = new BufferedWriter(osw);
+        os = new ObjectOutputStream(socket.getOutputStream());
     }
 
     @Override
@@ -47,11 +46,10 @@ public class Player implements Runnable {
         }
     }
 
-    public void sendMessage(String message) throws IOException {
+    public void sendMessage(GameEvent message) throws IOException {
         //Send response back to the client
         System.out.println(message);
-        bw.write(message + "\n");
-        bw.flush();
+        os.writeObject(message);
     }
 
     public Socket getSocket() {

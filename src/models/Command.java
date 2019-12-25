@@ -1,5 +1,5 @@
 package models;
 
 public enum Command {
-    MOVE, REMOVE, SCORE
+    MOVE, REMOVE, SCORE, START
 }

@@ -1,7 +1,6 @@
 import models.*;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 public class World {
@@ -60,7 +59,7 @@ public class World {
 
     public List<GameEvent> processMove(int playerId, String direction) {
         GameItem player = getGameItem(ItemType.PLAYER, playerId);
-        Direction dir = Direction.valueOf(direction.toUpperCase());
+        ClientCommands dir = ClientCommands.valueOf(direction.toUpperCase());
 
         Field currentPosition = getPosition(ItemType.PLAYER, playerId); //the position the player is currently on
         Field newPosition = getNextField(currentPosition, dir); //the next field in the given direction, null if outside the gameField
@@ -68,7 +67,7 @@ public class World {
         return move(currentPosition, newPosition, dir, player);
     }
 
-    private List<GameEvent> move(Field currentPlayerPosition, Field newPlayerPosition, Direction direction, GameItem player){
+    private List<GameEvent> move(Field currentPlayerPosition, Field newPlayerPosition, ClientCommands direction, GameItem player){
         List<GameEvent> gameEvents = new ArrayList<>();
         Field playerPosition = null;
 
@@ -181,7 +180,7 @@ public class World {
         return null;
     }
 
-    private Field getNextField(Field position, Direction direction){
+    private Field getNextField(Field position, ClientCommands direction){
         Field nextField = null;
 
         switch(direction){
