@@ -1,3 +1,4 @@
+import models.ClientCommand;
 import models.Command;
 import models.GameEvent;
 
@@ -35,12 +36,12 @@ public class Server {
         }
     }
 
-    public synchronized void handle(String message, int id) {
+    public synchronized void handle(ClientCommand message, int id) {
         List<GameEvent> events = new ArrayList<>();
-        if (message.equals("start")) {
+        if (message == ClientCommand.START) {
             events.add(new GameEvent(Command.START));
             startAI();
-        }else {
+        } else {
             events = world.processMove(id, message);
         }
         for (Player player : players) {

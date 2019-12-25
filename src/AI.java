@@ -1,4 +1,4 @@
-import models.ClientCommands;
+import models.ClientCommand;
 import models.Field;
 import models.ItemType;
 
@@ -21,31 +21,29 @@ public class AI implements Runnable {
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-
-            String message = calculateDirection().toString();
-            server.handle(message, ID);
+            server.handle(calculateDirection(), ID);
         }
 
     }
 
-    private ClientCommands calculateDirection(){
+    private ClientCommand calculateDirection(){
 
         World world = server.getWorld();
         Field currentPosition = world.getPosition(ItemType.PLAYER, ID);
         Field ballPosition = world.getPosition(ItemType.BALL, 1);
 
-        ClientCommands direction = ClientCommands.RIGHT;
+        ClientCommand direction = ClientCommand.RIGHT;
 
         if(currentPosition.y != ballPosition.y){
             int dist = ballPosition.y - currentPosition.y;
 
-            if(dist > 0) direction = ClientCommands.DOWN;
-            if(dist < 0) direction = ClientCommands.UP;
+            if(dist > 0) direction = ClientCommand.DOWN;
+            if(dist < 0) direction = ClientCommand.UP;
         } else {
             int dist = ballPosition.x - currentPosition.x;
 
-            if(dist > 0) direction = ClientCommands.RIGHT;
-            if(dist < 0) direction = ClientCommands.LEFT;
+            if(dist > 0) direction = ClientCommand.RIGHT;
+            if(dist < 0) direction = ClientCommand.LEFT;
         }
 
         return direction;

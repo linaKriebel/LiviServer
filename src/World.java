@@ -57,17 +57,16 @@ public class World {
     }
 
 
-    public List<GameEvent> processMove(int playerId, String direction) {
+    public List<GameEvent> processMove(int playerId, ClientCommand direction) {
         GameItem player = getGameItem(ItemType.PLAYER, playerId);
-        ClientCommands dir = ClientCommands.valueOf(direction.toUpperCase());
 
         Field currentPosition = getPosition(ItemType.PLAYER, playerId); //the position the player is currently on
-        Field newPosition = getNextField(currentPosition, dir); //the next field in the given direction, null if outside the gameField
+        Field newPosition = getNextField(currentPosition, direction); //the next field in the given direction, null if outside the gameField
 
-        return move(currentPosition, newPosition, dir, player);
+        return move(currentPosition, newPosition, direction, player);
     }
 
-    private List<GameEvent> move(Field currentPlayerPosition, Field newPlayerPosition, ClientCommands direction, GameItem player){
+    private List<GameEvent> move(Field currentPlayerPosition, Field newPlayerPosition, ClientCommand direction, GameItem player){
         List<GameEvent> gameEvents = new ArrayList<>();
         Field playerPosition = null;
 
@@ -180,7 +179,7 @@ public class World {
         return null;
     }
 
-    private Field getNextField(Field position, ClientCommands direction){
+    private Field getNextField(Field position, ClientCommand direction){
         Field nextField = null;
 
         switch(direction){

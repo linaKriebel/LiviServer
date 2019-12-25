@@ -1,7 +1,4 @@
-import models.Field;
-import models.GameEvent;
-import models.GameItem;
-import models.ItemType;
+import models.*;
 
 import java.io.*;
 import java.net.Socket;
@@ -10,13 +7,10 @@ import java.util.logging.Logger;
 public class Player implements Runnable {
 
     private int id;
-    private Field position;
-
     private Socket socket;
     private Server server;
-    private ObjectOutputStream os;
-    private OutputStreamWriter osw;
-    private BufferedWriter bw;
+    private ObjectOutputStream objectOutputStream;
+    private ObjectInputStream objectInputStream;
     Logger logger = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
 
 
@@ -24,32 +18,29 @@ public class Player implements Runnable {
         this.server = server;
         this.socket = socket;
         this.id = id;
-        os = new ObjectOutputStream(socket.getOutputStream());
+        objectOutputStream = new ObjectOutputStream(socket.getOutputStream());
+        objectInputStream = new ObjectInputStream(socket.getInputStream());
     }
 
     @Override
     public void run() {
         //receive message from client
         while (true) {
-            InputStream is = null;
+            ClientCommand command = null;
             try {
-                is = socket.getInputStream();
-                InputStreamReader isr = new InputStreamReader(is);
-                BufferedReader br = new BufferedReader(isr);
-                String receivedMessage = br.readLine();
-                server.handle(receivedMessage, id);
-                System.out.println(receivedMessage);
-            } catch (IOException e) {
-                logger.info("Player" + id + " disconnected.");
-
+                command = (ClientCommand) objectInputStream.readObject();
+            } catch (ClassNotFoundException | IOException e) {
+                e.printStackTrace();
             }
+            server.handle(command, id);
+            System.out.println(command);
         }
     }
 
     public void sendMessage(GameEvent message) throws IOException {
         //Send response back to the client
         System.out.println(message);
-        os.writeObject(message);
+        objectOutputStream.writeObject(message);
     }
 
     public Socket getSocket() {
