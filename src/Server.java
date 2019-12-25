@@ -19,18 +19,16 @@ public class Server {
     public Server(int port) {
         players = new ArrayList<>();
         world = new World();
-
+        int i = 1;
         try {
             server = new ServerSocket(port);
             executorService = Executors.newFixedThreadPool(200);
             while (true) {
                 //players
-                Player playerOne = new Player(this, server.accept(), 1);
-                //Player playerTwo = new Player(this, server.accept(), 2);
-                executorService.execute(playerOne);
-                //executorService.execute(playerTwo);
-                players.add(playerOne);
-                //players.add(playerTwo);
+                Player player = new Player(this, server.accept(), i);
+                executorService.execute(player);
+                players.add(player);
+                i++;
             }
         } catch (IOException e) {
             e.printStackTrace();
