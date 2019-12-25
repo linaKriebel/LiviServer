@@ -1,6 +1,7 @@
 import models.ClientCommand;
 import models.Command;
 import models.GameEvent;
+import models.ItemType;
 
 import java.io.*;
 import java.net.ServerSocket;
@@ -41,7 +42,12 @@ public class Server {
         if (message == ClientCommand.START) {
             events.add(new GameEvent(Command.START));
             startAI();
-        } else {
+        } else if (message == ClientCommand.END) {
+            Player playerToRemove = getPlayerById(id);
+            players.remove(playerToRemove);
+            events.add(new GameEvent(Command.END, id, ItemType.PLAYER));
+        }
+        else {
             events = world.processMove(id, message);
         }
         for (Player player : players) {
@@ -62,6 +68,15 @@ public class Server {
 
     public World getWorld() {
         return world;
+    }
+
+    private Player getPlayerById (int id) {
+        for (Player player : players) {
+            if (player.getId() == id) {
+                return player;
+            }
+        }
+        return null;
     }
 
 }
