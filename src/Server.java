@@ -1,5 +1,5 @@
 import models.ClientCommand;
-import models.Command;
+import models.ServerCommand;
 import models.GameEvent;
 import models.ItemType;
 
@@ -40,12 +40,12 @@ public class Server {
     public synchronized void handle(ClientCommand message, int id) {
         List<GameEvent> events = new ArrayList<>();
         if (message == ClientCommand.START) {
-            events.add(new GameEvent(Command.START));
+            events.add(new GameEvent(ServerCommand.START));
             startAI();
         } else if (message == ClientCommand.END) {
             Player playerToRemove = getPlayerById(id);
             players.remove(playerToRemove);
-            events.add(new GameEvent(Command.END, id, ItemType.PLAYER));
+            events.add(new GameEvent(ServerCommand.END, id, ItemType.PLAYER));
         }
         else {
             events = world.processMove(id, message);

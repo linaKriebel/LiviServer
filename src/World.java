@@ -101,8 +101,8 @@ public class World {
                                 GameItem ball = gameField[newPlayerPosition.x][newPlayerPosition.y];
                                 updateGameField(newPlayerPosition, potentialBallPosition, null);
                                 playerPosition = newPlayerPosition;
-                                gameEvents.add(new GameEvent(Command.REMOVE, ball.getId(), ball.getType()));
-                                gameEvents.add(new GameEvent(Command.SCORE, player.getId(), player.getType()));
+                                gameEvents.add(new GameEvent(ServerCommand.REMOVE, ball.getId(), ball.getType()));
+                                gameEvents.add(new GameEvent(ServerCommand.SCORE, player.getId(), player.getType()));
 
                             } else {
                                 //field is occupied, player and ball can not be moved
@@ -117,7 +117,7 @@ public class World {
                             playerPosition = newPlayerPosition;
                             updateGameField(newPlayerPosition, potentialBallPosition, ball);
 
-                            gameEvents.add(new GameEvent(Command.MOVE, ball.getId(), ball.getType(), potentialBallPosition));
+                            gameEvents.add(new GameEvent(ServerCommand.MOVE, ball.getId(), ball.getType(), potentialBallPosition));
                         }
                     } else {
                         //ball can not be moved --> player can not move either
@@ -136,7 +136,7 @@ public class World {
         }
 
         updateGameField(currentPlayerPosition, playerPosition, player);
-        gameEvents.add(new GameEvent(Command.MOVE , player.getId(), player.getType(), playerPosition));
+        gameEvents.add(new GameEvent(ServerCommand.MOVE , player.getId(), player.getType(), playerPosition));
 
 
         return gameEvents;

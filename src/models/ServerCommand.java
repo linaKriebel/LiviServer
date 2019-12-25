@@ -1,5 +1,5 @@
 package models;
 
-public enum Command {
+public enum ServerCommand {
     MOVE, REMOVE, SCORE, START, END
 }
