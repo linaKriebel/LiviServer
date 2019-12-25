@@ -42,10 +42,13 @@ public class Server {
         if (message == ClientCommand.START) {
             events.add(new GameEvent(ServerCommand.START));
             startAI();
-        } else if (message == ClientCommand.END) {
+        } else if (message == ClientCommand.EXIT) {
             Player playerToRemove = getPlayerById(id);
             players.remove(playerToRemove);
-            events.add(new GameEvent(ServerCommand.END, id, ItemType.PLAYER));
+            events.add(new GameEvent(ServerCommand.EXIT, id, ItemType.PLAYER));
+        } else if (message == ClientCommand.COUNTDOWN) {
+            events.add(new GameEvent(ServerCommand.END));
+            //remove all players
         }
         else {
             events = world.processMove(id, message);
