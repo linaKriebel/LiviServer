@@ -10,6 +10,10 @@ public class World {
 
     private GameItem[][] gameField ; //in world grid coordinates
 
+    private List<GameItem> players = new ArrayList<>();
+    public List<GameItem> balls  = new ArrayList<>();
+    private List<GameItem> holes  = new ArrayList<>();
+
     public World() {
         gameField = new GameItem[width][height];
 
@@ -54,6 +58,13 @@ public class World {
         gameField[5][5] = obstacle1;
         gameField[10][10] = hole1;
         gameField[15][15] = hole2;
+
+        players.add(player1);
+        players.add(player2);
+        balls.add(ball1);
+        balls.add(ball2);
+        holes.add(hole1);
+        holes.add(hole2);
     }
 
 
@@ -97,10 +108,12 @@ public class World {
                         if ( potentialBallField != null ) {
 
                             if (potentialBallField.getType() == ItemType.HOLE) {
-                                // delete ball
+                                // ball is in hole, remove ball from field
                                 GameItem ball = gameField[newPlayerPosition.x][newPlayerPosition.y];
                                 updateGameField(newPlayerPosition, potentialBallPosition, null);
+                                balls.remove(ball);
                                 playerPosition = newPlayerPosition;
+
                                 gameEvents.add(new GameEvent(ServerCommand.REMOVE, ball.getId(), ball.getType()));
                                 gameEvents.add(new GameEvent(ServerCommand.SCORE, player.getId(), player.getType()));
 
@@ -200,4 +213,33 @@ public class World {
         return nextField;
 
     }
+
+    public boolean ballCanBeMovedInDirection(GameItem ball, ClientCommand direction) {
+
+        boolean ballCanBeMoved;
+
+        Field ballPosition = getPosition(ball.getType(), ball.getId());
+        Field potentialBallPosition = getNextField(ballPosition, direction);
+
+        if (potentialBallPosition != null) {
+            //ball can be moved, if the field is not occupied
+            GameItem potentialBallField = gameField[potentialBallPosition.x][potentialBallPosition.y];
+            if (potentialBallField != null) {
+
+                if (potentialBallField.getType() == ItemType.HOLE) {
+                    ballCanBeMoved = true;
+                } else {
+                    //field is occupied, player and ball can not be moved
+                    ballCanBeMoved = false;
+                }
+            } else {
+                ballCanBeMoved = true;
+            }
+        } else {
+            ballCanBeMoved = false;
+        }
+
+        return ballCanBeMoved;
+    }
+
 }

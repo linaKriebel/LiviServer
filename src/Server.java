@@ -39,28 +39,44 @@ public class Server {
 
     public synchronized void handle(ClientCommand message, int id) {
         List<GameEvent> events = new ArrayList<>();
-        if (message == ClientCommand.START) {
-            events.add(new GameEvent(ServerCommand.START));
-            startAI();
-        } else if (message == ClientCommand.EXIT) {
-            Player playerToRemove = getPlayerById(id);
-            players.remove(playerToRemove);
-            events.add(new GameEvent(ServerCommand.EXIT, id, ItemType.PLAYER));
-        } else if (message == ClientCommand.COUNTDOWN) {
-            events.add(new GameEvent(ServerCommand.END));
-            stopAI();
-            //players.clear(); is that necessary ?
-        } else {
-            events = world.processMove(id, message);
+
+        switch(message){
+            case START:
+                events.add(new GameEvent(ServerCommand.START));
+                startAI();
+                break;
+            case EXIT:
+                events.add(new GameEvent(ServerCommand.EXIT, id, ItemType.PLAYER));
+                Player playerToRemove = getPlayerById(id);
+                players.remove(playerToRemove);
+                break;
+            case COUNTDOWN:
+                events.add(new GameEvent(ServerCommand.END));
+                stopAI();
+                //players.clear(); is that necessary ?
+                break;
+            case LEFT:
+            case RIGHT:
+            case UP:
+            case DOWN:
+                events = world.processMove(id, message);
+                break;
         }
+
+        // send the answer(s) to each client instance
         for (Player player : players) {
-            try {
-                for (GameEvent event : events) {
+            for (GameEvent event : events) {
+                try {
                     player.sendMessage(event);
+                } catch (IOException e) {
+                    e.printStackTrace();
                 }
-            } catch (IOException e) {
-                e.printStackTrace();
             }
+        }
+
+        //also send the answer(s) to the ai
+        for (GameEvent event : events) {
+            ai.handleMessage(event);
         }
     }
 

@@ -39,7 +39,6 @@ public class Player implements Runnable {
 
     public void sendMessage(GameEvent message) throws IOException {
         //Send response back to the client
-        System.out.println(message);
         objectOutputStream.writeObject(message);
     }
 
