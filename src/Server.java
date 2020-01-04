@@ -42,6 +42,7 @@ public class Server {
 
         switch(message){
             case START:
+                world.generate();
                 events.add(new GameEvent(ServerCommand.START));
                 startAI();
                 break;
@@ -49,6 +50,7 @@ public class Server {
                 events.add(new GameEvent(ServerCommand.EXIT, id, ItemType.PLAYER));
                 Player playerToRemove = getPlayerById(id);
                 players.remove(playerToRemove);
+                if(players.isEmpty()) stopAI();
                 break;
             case COUNTDOWN:
                 events.add(new GameEvent(ServerCommand.END));
