@@ -26,10 +26,10 @@ public class Server {
             server = new ServerSocket(port);
             executorService = Executors.newFixedThreadPool(200);
             while (true) {
-                //players
                 Player player = new Player(this, server.accept(), i);
                 executorService.execute(player);
                 players.add(player);
+                handle(ClientCommand.REGISTER, i);
                 i++;
             }
         } catch (IOException e) {
@@ -41,6 +41,9 @@ public class Server {
         List<GameEvent> events = new ArrayList<>();
 
         switch(message){
+            case REGISTER:
+                events.add(new GameEvent(ServerCommand.REGISTER, id, ItemType.PLAYER));
+                break;
             case START:
                 world.generate();
                 events.add(new GameEvent(ServerCommand.START, world.players, world.balls, world.obstacles, world.holes));
@@ -78,8 +81,10 @@ public class Server {
         }
 
         //also send the answer(s) to the ai
-        for (GameEvent event : events) {
-            ai.handleMessage(event);
+        if(ai != null) {
+            for (GameEvent event : events) {
+                ai.handleMessage(event);
+            }
         }
     }
 
