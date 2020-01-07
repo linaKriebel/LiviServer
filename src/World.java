@@ -1,87 +1,164 @@
+import maze.Cell;
+import maze.MazeGenerator;
 import models.*;
 
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 public class World {
 
+    private List<Player> registeredPlayers;
+
     private final int WIDTH = 20;
     private final int HEIGHT = 20;
-
     private GameItem[][] gameField ; // world grid coordinates
+    private final Color[] colors = {Color.MAGENTA, Color.YELLOW, Color.RED, Color.ORANGE};
+    private int idCount = 0;
 
     public List<GameItem> players = new ArrayList<>();
     public List<GameItem> balls  = new ArrayList<>();
     public List<GameItem> obstacles = new ArrayList<>();
     public List<GameItem> holes  = new ArrayList<>();
 
-    public World() {
-        gameField = new GameItem[WIDTH][HEIGHT];
+    public World(List<Player> registeredPlayers) {
+        this.registeredPlayers = registeredPlayers;
+        this.gameField = new GameItem[WIDTH][HEIGHT];
     }
 
     public void generate(){
-        //TODO generate!!!
 
-        //ai and players
-        GameItem ai = new GameItem(ItemType.PLAYER, 0, new Field(0,0), Color.CYAN);
-        gameField[1][1] = ai;
-        players.add(ai);
+        // generate random maze and set obstacles
 
-        //TODO only registered players (randomize starting position!)
-        GameItem player1 = new GameItem(ItemType.PLAYER, 1, new Field(2,2), Color.MAGENTA);
-        gameField[2][2] = player1;
-        players.add(player1);
+        MazeGenerator mazeGenerator = new MazeGenerator(WIDTH/4,WIDTH/4);
+        Cell[][] board = mazeGenerator.carve();
 
-        GameItem player2 = new GameItem(ItemType.PLAYER, 2, new Field(6,6), Color.YELLOW);
-        gameField[6][6] = player2;
-        players.add(player2);
+        List<GameItem> newObstacles = new ArrayList<>();
 
-        //balls
-        GameItem ball1 = new GameItem(ItemType.BALL, 1, new Field(7,8), Color.WHITE);
-        gameField[7][8] = ball1;
-        balls.add(ball1);
+        for(int x=0; x<WIDTH/4; x++){
+            for(int y=0; y<WIDTH/4; y++){
 
-        GameItem ball2 = new GameItem(ItemType.BALL, 2, new Field(3,3), Color.WHITE);
-        gameField[3][3] = ball2;
-        balls.add(ball2);
+                Cell currentCell = board[x][y];
 
-        //holes
-        GameItem hole1 = new GameItem(ItemType.HOLE, 1, new Field(10,10), Color.GREEN);
-        gameField[10][10] = hole1;
-        holes.add(hole1);
+                int fieldX = x*4;
+                int fieldY = y*4;
 
-        GameItem hole2 = new GameItem(ItemType.HOLE, 2, new Field(15,15), Color.GREEN);
-        gameField[15][15] = hole2;
-        holes.add(hole2);
+                if (y > 0 && currentCell.northWall) {
+                    GameItem obstacle1 = new GameItem(ItemType.OBSTACLE, 0, new Field(fieldX, fieldY), Color.GRAY);
+                    newObstacles.add(obstacle1);
+                    gameField[fieldX][fieldY] = obstacle1;
 
-        //obstacles
-        int idCount = 0;
+                    GameItem obstacle2 = new GameItem(ItemType.OBSTACLE, 0, new Field(fieldX+1, fieldY), Color.GRAY);
+                    newObstacles.add(obstacle2);
+                    gameField[fieldX+1][fieldY] = obstacle2;
+
+                    GameItem obstacle3 = new GameItem(ItemType.OBSTACLE, 0, new Field(fieldX+2, fieldY), Color.GRAY);
+                    newObstacles.add(obstacle3);
+                    gameField[fieldX+2][fieldY] = obstacle3;
+
+                    GameItem obstacle4 = new GameItem(ItemType.OBSTACLE, 0, new Field(fieldX+3, fieldY), Color.GRAY);
+                    newObstacles.add(obstacle4);
+                    gameField[fieldX+3][fieldY] = obstacle4;
+                }
+
+                if (x > 0 && currentCell.westWall) {
+                    GameItem obstacle1 = new GameItem(ItemType.OBSTACLE, 0, new Field(fieldX, fieldY), Color.GRAY);
+                    newObstacles.add(obstacle1);
+                    gameField[fieldX][fieldY] = obstacle1;
+
+                    GameItem obstacle2 = new GameItem(ItemType.OBSTACLE, 0, new Field(fieldX, fieldY+1), Color.GRAY);
+                    newObstacles.add(obstacle2);
+                    gameField[fieldX][fieldY+1] = obstacle2;
+
+                    GameItem obstacle3 = new GameItem(ItemType.OBSTACLE, 0, new Field(fieldX, fieldY+2), Color.GRAY);
+                    newObstacles.add(obstacle3);
+                    gameField[fieldX][fieldY+2] = obstacle3;
+
+                    GameItem obstacle4 = new GameItem(ItemType.OBSTACLE, 0, new Field(fieldX, fieldY+3), Color.GRAY);
+                    newObstacles.add(obstacle4);
+                    gameField[fieldX][fieldY+3] = obstacle4;
+                }
+            }
+        }
+        obstacles.addAll(newObstacles);
+
+
+        // create surrounding border obstacles (static)
+
         for(int x = 0; x< WIDTH; x++){
-            GameItem obstacle1 = new GameItem(ItemType.OBSTACLE, idCount, new Field(x, 0), Color.GRAY);
-            gameField[x][0] = obstacle1;
+            GameItem obstacle1 = new GameItem(ItemType.OBSTACLE, 0, new Field(x, 0), Color.GRAY);
             obstacles.add(obstacle1);
-            idCount++;
+            gameField[x][0] = obstacle1;
 
-            GameItem obstacle2 = new GameItem(ItemType.OBSTACLE, idCount, new Field(x, HEIGHT-1), Color.GRAY);
-            gameField[x][HEIGHT -1] = obstacle2;
+            GameItem obstacle2 = new GameItem(ItemType.OBSTACLE, 0, new Field(x, HEIGHT-1), Color.GRAY);
             obstacles.add(obstacle2);
-            idCount++;
-
+            gameField[x][HEIGHT-1] = obstacle2;
         }
 
         for(int y = 0; y< HEIGHT; y++){
-            GameItem obstacle1 = new GameItem(ItemType.OBSTACLE, idCount, new Field(0,y), Color.GRAY);
-            gameField[0][y] = obstacle1;
+            GameItem obstacle1 = new GameItem(ItemType.OBSTACLE, 0, new Field(0,y), Color.GRAY);
             obstacles.add(obstacle1);
-            idCount++;
+            gameField[0][y] = obstacle1;
 
-            GameItem obstacle2 = new GameItem(ItemType.OBSTACLE, idCount, new Field(WIDTH-1, y), Color.GRAY);
-            gameField[WIDTH -1][y] = obstacle2;
+            GameItem obstacle2 = new GameItem(ItemType.OBSTACLE, 0, new Field(WIDTH-1, y), Color.GRAY);
             obstacles.add(obstacle2);
-            idCount++;
-
+            gameField[WIDTH-1][y] = obstacle2;
         }
+
+
+        // create ai and players
+
+        Field aiStartingField = getRandomFreeField();
+        GameItem ai = new GameItem(ItemType.PLAYER, 0, aiStartingField, Color.CYAN);
+        players.add(ai);
+        gameField[aiStartingField.x][aiStartingField.y] = ai;
+
+        // create only registered players
+        for (Player registeredPlayer : registeredPlayers){
+            Field playerStartingField = getRandomFreeField();
+            GameItem player = new GameItem(ItemType.PLAYER, registeredPlayer.getId(), playerStartingField, colors[registeredPlayer.getId()]);
+            players.add(player);
+            gameField[playerStartingField.x][playerStartingField.y] = player;
+        }
+
+        // create balls
+
+        int numberOfBalls = registeredPlayers.size() * 2;
+        for(int i=0; i<numberOfBalls; i++) {
+            Field ballStartingField = getRandomFreeField();
+            GameItem ball = new GameItem(ItemType.BALL, idCount, ballStartingField, Color.WHITE);
+            balls.add(ball);
+            gameField[ballStartingField.x][ballStartingField.y] = ball;
+            idCount++;
+        }
+
+        idCount = 0; // reset
+
+
+        // create holes
+
+        int numberOfHoles = registeredPlayers.size();
+        for(int i=0; i<numberOfHoles; i++) {
+            Field holeField = getRandomFreeField();
+            GameItem hole = new GameItem(ItemType.BALL, idCount, holeField, Color.GREEN);
+            holes.add(hole);
+            gameField[holeField.x][holeField.y] = hole;
+            idCount++;
+        }
+    }
+
+    private Field getRandomFreeField(){
+        Random rand = new Random();
+        int x = rand.nextInt(WIDTH);
+        int y = rand.nextInt(HEIGHT);
+
+        while(gameField[x][y] != null) {
+            x = rand.nextInt(WIDTH);
+            y = rand.nextInt(HEIGHT);
+        }
+
+        return new Field(x,y);
     }
 
     public List<GameEvent> processMove(int playerId, ClientCommand direction) {
@@ -253,5 +330,24 @@ public class World {
         }
 
         return ballCanBeMoved;
+    }
+
+    private void random(){
+        final int OBSTACLE_NUMBER = 12;
+
+        for (int i = 0; i < OBSTACLE_NUMBER; i++) {
+            //Get random position for the next bomb
+            Random rand = new Random();
+            int row = rand.nextInt(WIDTH);
+            int col = rand.nextInt(HEIGHT);
+            while(gameField[row][col] != null) { //if this position is a bomb
+                //we get new position
+                row = rand.nextInt(WIDTH);
+                col = rand.nextInt(HEIGHT);
+            }
+            GameItem obstacle = new GameItem(ItemType.OBSTACLE, idCount, new Field(row, col), Color.GRAY);
+            gameField[row][col] = obstacle;
+            obstacles.add(obstacle);
+        }
     }
 }
