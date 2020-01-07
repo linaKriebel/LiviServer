@@ -14,7 +14,7 @@ public class World {
     private final int WIDTH = 20;
     private final int HEIGHT = 20;
     private GameItem[][] gameField ; // world grid coordinates
-    private final Color[] colors = {Color.MAGENTA, Color.YELLOW, Color.RED, Color.ORANGE};
+    private final Color[] colors = {null, Color.MAGENTA, Color.YELLOW, Color.RED, Color.ORANGE};
     private int idCount = 0;
 
     public List<GameItem> players = new ArrayList<>();
