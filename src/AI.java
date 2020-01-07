@@ -63,12 +63,12 @@ public class AI implements Runnable {
             if (dist < 0) direction = ClientCommand.LEFT;
         }
 
-        if (world.ballCanBeMovedInDirection(ballToChase, direction)) {
-            return direction;
-        } else {
+        if (!world.ballCanBeMovedInDirection(ballToChase, direction)) {
             balls.remove(0);
-            return null;
+            direction = null;
         }
+
+        return direction;
     }
 
     public void handleMessage(GameEvent message) {
