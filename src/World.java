@@ -123,6 +123,7 @@ public class World {
         }
 
         // create balls
+        //TODO make sure each ball can be moved into a hole
 
         int numberOfBalls = registeredPlayers.size() * 2;
         for(int i=0; i<numberOfBalls; i++) {
@@ -141,7 +142,7 @@ public class World {
         int numberOfHoles = registeredPlayers.size();
         for(int i=0; i<numberOfHoles; i++) {
             Field holeField = getRandomFreeField();
-            GameItem hole = new GameItem(ItemType.BALL, idCount, holeField, Color.GREEN);
+            GameItem hole = new GameItem(ItemType.HOLE, idCount, holeField, Color.GREEN);
             holes.add(hole);
             gameField[holeField.x][holeField.y] = hole;
             idCount++;
