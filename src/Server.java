@@ -20,7 +20,7 @@ public class Server {
 
     public Server(int port) {
         players = new ArrayList<>();
-        world = new World();
+        world = new World(players);
         int i = 1;
         try {
             server = new ServerSocket(port);
@@ -43,7 +43,8 @@ public class Server {
         switch(message){
             case START:
                 world.generate();
-                events.add(new GameEvent(ServerCommand.START));
+                events.add(new GameEvent(ServerCommand.START, world.players, world.balls, world.obstacles, world.holes));
+                //events.add(new GameEvent(ServerCommand.START));
                 startAI();
                 break;
             case EXIT:
