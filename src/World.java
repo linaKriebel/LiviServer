@@ -122,19 +122,6 @@ public class World {
             gameField[playerStartingField.x][playerStartingField.y] = player;
         }
 
-        // create balls
-        int numberOfBalls = registeredPlayers.size() * 2;
-        for(int i=0; i<numberOfBalls; i++) {
-            Field ballStartingField = getRandomFreeBallField();
-            GameItem ball = new GameItem(ItemType.BALL, idCount, ballStartingField, Color.WHITE);
-            balls.add(ball);
-            gameField[ballStartingField.x][ballStartingField.y] = ball;
-            idCount++;
-        }
-
-        idCount = 0; // reset
-
-
         // create holes
 
         int numberOfHoles = registeredPlayers.size();
@@ -145,6 +132,19 @@ public class World {
             gameField[holeField.x][holeField.y] = hole;
             idCount++;
         }
+
+        idCount = 0; // reset
+
+        // create balls
+        int numberOfBalls = registeredPlayers.size() * 2;
+        for(int i=0; i<numberOfBalls; i++) {
+            Field ballStartingField = getRandomFreeBallField();
+            GameItem ball = new GameItem(ItemType.BALL, idCount, ballStartingField, Color.WHITE);
+            balls.add(ball);
+            gameField[ballStartingField.x][ballStartingField.y] = ball;
+            idCount++;
+        }
+
     }
 
     private Field getRandomFreeField(){

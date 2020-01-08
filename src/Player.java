@@ -2,7 +2,6 @@ import models.*;
 
 import java.io.*;
 import java.net.Socket;
-import java.util.logging.Logger;
 
 public class Player implements Runnable {
 
@@ -11,8 +10,6 @@ public class Player implements Runnable {
     private Server server;
     private ObjectOutputStream objectOutputStream;
     private ObjectInputStream objectInputStream;
-    Logger logger = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
-
 
     public Player(Server server, Socket socket, int id) throws IOException {
         this.server = server;
