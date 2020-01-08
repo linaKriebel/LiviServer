@@ -14,7 +14,6 @@ public class World {
     private final int WIDTH = 20;
     private final int HEIGHT = 20;
     private GameItem[][] gameField ; // world grid coordinates
-    private final Color[] colors = {null, Color.MAGENTA, Color.YELLOW, Color.RED, Color.ORANGE};
     private int idCount = 0;
 
     public List<GameItem> players = new ArrayList<>();
@@ -108,7 +107,6 @@ public class World {
 
 
         // create ai and players
-
         Field aiStartingField = getRandomFreeField();
         GameItem ai = new GameItem(ItemType.PLAYER, 0, aiStartingField, Color.CYAN);
         players.add(ai);
@@ -117,7 +115,7 @@ public class World {
         // create only registered players
         for (Player registeredPlayer : registeredPlayers){
             Field playerStartingField = getRandomFreeField();
-            GameItem player = new GameItem(ItemType.PLAYER, registeredPlayer.getId(), playerStartingField, colors[registeredPlayer.getId()]);
+            GameItem player = new GameItem(ItemType.PLAYER, registeredPlayer.getId(), playerStartingField, generateRandomColor());
             players.add(player);
             gameField[playerStartingField.x][playerStartingField.y] = player;
         }
@@ -348,22 +346,11 @@ public class World {
         return ballCanBeMoved;
     }
 
-    private void random(){
-        final int OBSTACLE_NUMBER = 12;
-
-        for (int i = 0; i < OBSTACLE_NUMBER; i++) {
-            //Get random position for the next bomb
-            Random rand = new Random();
-            int row = rand.nextInt(WIDTH);
-            int col = rand.nextInt(HEIGHT);
-            while(gameField[row][col] != null) { //if this position is a bomb
-                //we get new position
-                row = rand.nextInt(WIDTH);
-                col = rand.nextInt(HEIGHT);
-            }
-            GameItem obstacle = new GameItem(ItemType.OBSTACLE, idCount, new Field(row, col), Color.GRAY);
-            gameField[row][col] = obstacle;
-            obstacles.add(obstacle);
-        }
+    private Color generateRandomColor() {
+        Random random = new Random();
+        float r = random.nextFloat();
+        float g = random.nextFloat();
+        float b = random.nextFloat();
+        return new Color(r, g, b);
     }
 }
