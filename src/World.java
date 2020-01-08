@@ -123,11 +123,9 @@ public class World {
         }
 
         // create balls
-        //TODO make sure each ball can be moved into a hole
-
         int numberOfBalls = registeredPlayers.size() * 2;
         for(int i=0; i<numberOfBalls; i++) {
-            Field ballStartingField = getRandomFreeField();
+            Field ballStartingField = getRandomFreeBallField();
             GameItem ball = new GameItem(ItemType.BALL, idCount, ballStartingField, Color.WHITE);
             balls.add(ball);
             gameField[ballStartingField.x][ballStartingField.y] = ball;
@@ -159,6 +157,23 @@ public class World {
             y = rand.nextInt(HEIGHT);
         }
 
+        return new Field(x,y);
+    }
+
+    private Field getRandomFreeBallField(){
+        Random rand = new Random();
+        boolean checkNeighbors = false;
+        int x = 0;
+        int y = 0;
+
+        while (!checkNeighbors) {
+            x = rand.nextInt(WIDTH);
+            y = rand.nextInt(HEIGHT);
+            if (gameField[x][y] == null && gameField[x+1][y] == null && gameField[x-1][y] == null && gameField[x][y+1] == null && gameField[x][y-1] == null) {
+                checkNeighbors = true;
+            }
+
+        }
         return new Field(x,y);
     }
 
