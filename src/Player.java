@@ -19,6 +19,10 @@ public class Player implements Runnable {
         objectInputStream = new ObjectInputStream(socket.getInputStream());
     }
 
+    public Player(int id) {
+        this.id = id;
+    }
+
     @Override
     public void run() {
         //receive message from client

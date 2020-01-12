@@ -13,7 +13,7 @@ public class World {
 
     private final int WIDTH = 20;
     private final int HEIGHT = 20;
-    private GameItem[][] gameField ; // world grid coordinates
+    public GameItem[][] gameField ; // world grid coordinates
     private int idCount = 0;
 
     public List<GameItem> players = new ArrayList<>();

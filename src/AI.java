@@ -1,5 +1,6 @@
 import models.*;
 import java.util.List;
+import java.util.Stack;
 
 public class AI implements Runnable {
 
@@ -17,23 +18,34 @@ public class AI implements Runnable {
     @Override
     public void run() {
 
+        PathFinder test = new PathFinder(server.getWorld().gameField);
+        Stack<ClientCommand> stack = test.findPath(server.getWorld().getPosition(ItemType.PLAYER, ID), server.getWorld().balls.get(0).getCoordinates());
+
         while (running) {
 
             try {
-                Thread.sleep(2000);
+                // determines speed of AI
+                Thread.sleep(500);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
 
             ClientCommand direction = null;
 
-            if (!balls.isEmpty()) {
-                //if there are balls in the game, move towards one of them
-                GameItem ball = balls.get(0);
-                direction = calculateDirection(ball);
+            if(!stack.isEmpty()) {
+                direction = stack.pop();
             } else {
-                //reload all balls from the server world
-                balls = server.getWorld().balls;
+
+                if (balls.isEmpty()) {
+                    //reload all balls from the server world
+                    balls = server.getWorld().balls;
+                } else {
+                    balls.remove(0);
+
+                    //if there are balls in the game, move towards one of them
+                    GameItem ball = balls.get(0);
+                    stack = test.findPath(server.getWorld().getPosition(ItemType.PLAYER, ID), ball.getCoordinates());
+                }
             }
 
             if (direction != null) {
@@ -72,7 +84,7 @@ public class AI implements Runnable {
     }
 
     public void handleMessage(GameEvent message) {
-        if (message.getCommand() == ServerCommand.REMOVE) {
+        if (message.getCommand() == ServerCommand.REMOVE && message.getItemType() == ItemType.BALL) {
             balls = server.getWorld().balls;
         }
     }
