@@ -35,13 +35,16 @@ public class AI implements Runnable {
             if(!stack.isEmpty()) {
                 direction = stack.pop();
             } else {
+                try{
+                    balls.remove(0);
+                } catch (IndexOutOfBoundsException e) {
+                    // ignore
+                }
 
                 if (balls.isEmpty()) {
                     //reload all balls from the server world
                     balls = server.getWorld().balls;
                 } else {
-                    balls.remove(0);
-
                     //if there are balls in the game, move towards one of them
                     GameItem ball = balls.get(0);
                     stack = test.findPath(server.getWorld().getPosition(ItemType.PLAYER, ID), ball.getCoordinates());
