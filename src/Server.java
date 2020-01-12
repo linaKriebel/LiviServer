@@ -47,7 +47,6 @@ public class Server {
             case START:
                 world.generate();
                 events.add(new GameEvent(ServerCommand.START, world.players, world.balls, world.obstacles, world.holes));
-                //events.add(new GameEvent(ServerCommand.START));
                 startAI();
                 break;
             case EXIT:
@@ -59,7 +58,6 @@ public class Server {
             case COUNTDOWN:
                 events.add(new GameEvent(ServerCommand.END));
                 stopAI();
-                //players.clear(); is that necessary ?
                 break;
             case LEFT:
             case RIGHT:
@@ -80,7 +78,7 @@ public class Server {
             }
         }
 
-        //also send the answer(s) to the ai
+        // also send the answer(s) to the ai
         if(ai != null) {
             for (GameEvent event : events) {
                 ai.handleMessage(event);

@@ -34,7 +34,7 @@ public class Player implements Runnable {
                 e.printStackTrace();
             }
             server.handle(command, id);
-            System.out.println(command);
+            System.out.println("Message from client " + id + ": " + command);
         }
     }
 

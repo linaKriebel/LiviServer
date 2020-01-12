@@ -189,7 +189,6 @@ public class World {
         Field playerPosition = null;
 
         if(newPlayerPosition != null) {
-            System.out.println("Next field: " + newPlayerPosition.x + ", " + newPlayerPosition.y);
 
             //next field exists
 

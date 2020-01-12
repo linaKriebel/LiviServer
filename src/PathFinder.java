@@ -3,33 +3,19 @@ import models.Field;
 import models.GameItem;
 import models.ItemType;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 import java.util.Stack;
 
 public class PathFinder {
-
-    final static int TRIED = 2;
-    final static int PATH = 3;
-
-    public static void main(String[] args) {
-        List<Player> ai = new ArrayList<>();
-        ai.add(new Player(0));
-        World world = new World(ai);
-        world.generate();
-
-        PathFinder maze = new PathFinder(world.gameField);
-        maze.findPath(new Field(1,1), world.balls.get(0).getCoordinates());
-        System.out.println(maze.toString());
-    }
 
     private GameItem[][] gameField;
     private int height;
     private int width;
 
-    private int[][] map;
     private Stack<ClientCommand> stack = new Stack();
+
+    private int[][] map;
+    private final int TRIED = 1;
+    private final int PATH = 2;
 
     public PathFinder(GameItem[][] gameField) {
         this.gameField = gameField;
@@ -84,7 +70,6 @@ public class PathFinder {
 
             return true;
         }
-
         return false;
     }
 
@@ -92,46 +77,27 @@ public class PathFinder {
         return current.x == target.x - 1 && current.y == target.y - 1;
     }
 
-    private boolean isValid(int i, int j) {
-        if (inRange(i, j) && isOpen(i, j) && !isTried(i, j)) {
+    private boolean isValid(int x, int y) {
+        if (isOnGameField(x, y) && isOpen(x, y) && !isTried(x, y)) {
             return true;
         }
-
         return false;
     }
 
-    private boolean isOpen(int i, int j) {
-        if(gameField[i][j] != null){
-            if(gameField[i][j].getId() == 0 && gameField[i][j].getType() == ItemType.PLAYER) {
+    private boolean isOpen(int x, int y) {
+        if(gameField[x][y] != null){
+            if(gameField[x][y].getId() == 0 && gameField[x][y].getType() == ItemType.PLAYER) {
                 return true;
             }
         }
-
-        return gameField[i][j] == null;
+        return gameField[x][y] == null;
     }
 
-    private boolean isTried(int i, int j) {
-        return map[i][j] == TRIED;
+    private boolean isTried(int x, int y) {
+        return map[x][y] == TRIED;
     }
 
-    private boolean inRange(int i, int j) {
-        return inHeight(i) && inWidth(j);
-    }
-
-    private boolean inHeight(int i) {
-        return i >= 0 && i < height;
-    }
-
-    private boolean inWidth(int j) {
-        return j >= 0 && j < width;
-    }
-
-    public String toString() {
-        String s = "";
-        for (int[] row : map) {
-            s += Arrays.toString(row) + "\n";
-        }
-
-        return s;
+    private boolean isOnGameField(int x, int y) {
+        return x >= 0 && x < height && y >= 0 && y < width;
     }
 }
