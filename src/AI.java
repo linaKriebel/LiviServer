@@ -1,7 +1,9 @@
 import models.*;
 import java.util.List;
 import java.util.Stack;
-
+/**
+ * simulates an artificial intelligence which goes after balls
+ */
 public class AI implements Runnable {
 
     private Server server;
@@ -17,7 +19,6 @@ public class AI implements Runnable {
 
     @Override
     public void run() {
-
         PathFinder test = new PathFinder(server.getWorld().gameField);
         Stack<ClientCommand> stack = test.findPath(server.getWorld().getPosition(ItemType.PLAYER, ID), server.getWorld().balls.get(0).getCoordinates());
 

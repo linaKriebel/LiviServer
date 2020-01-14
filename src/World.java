@@ -1,5 +1,4 @@
-import maze.Cell;
-import maze.MazeGenerator;
+import models.Cell;
 import models.*;
 
 import java.awt.*;
@@ -7,6 +6,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+/**
+ * data structure of game field and its items
+ * generates initial game field setup
+ * validation of game item movements
+ */
 public class World {
 
     private List<Player> registeredPlayers;

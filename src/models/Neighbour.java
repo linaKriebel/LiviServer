@@ -1,4 +1,4 @@
-package maze;
+package models;
 
 public enum Neighbour {
 

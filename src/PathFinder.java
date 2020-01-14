@@ -5,6 +5,9 @@ import models.ItemType;
 
 import java.util.Stack;
 
+/**
+ * calculates a path in game field
+ */
 public class PathFinder {
 
     private GameItem[][] gameField;

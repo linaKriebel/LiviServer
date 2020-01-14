@@ -3,6 +3,9 @@ import models.*;
 import java.io.*;
 import java.net.Socket;
 
+/**
+ * a registered player that handles communication from server to client
+ */
 public class Player implements Runnable {
 
     private int id;

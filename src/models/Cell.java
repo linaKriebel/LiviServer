@@ -1,12 +1,9 @@
-package maze;
-
-import models.Field;
+package models;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class Cell
-{
+public class Cell {
     public Field position;
 
     public Boolean visited;
@@ -21,8 +18,7 @@ public class Cell
     public Cell westNeighbour;  //2
     public Cell eastNeighbour;  //3
 
-    public Cell(Field position)
-    {
+    public Cell(Field position) {
         this.position = position;
 
         visited = false;
@@ -33,8 +29,7 @@ public class Cell
         eastWall = true;
     }
 
-    public Cell()
-    {
+    public Cell() {
         position = null;
 
         visited = false;
@@ -45,8 +40,7 @@ public class Cell
         eastWall = true;
     }
 
-    public List<Cell> GetNeighbours()
-    {
+    public List<Cell> GetNeighbours() {
         List<Cell> neighbours = new ArrayList<>();
         neighbours.add(northNeighbour);
         neighbours.add(southNeighbour);
@@ -56,10 +50,8 @@ public class Cell
         return neighbours;
     }
 
-    public Cell GetNeighbour(Neighbour neighbour)
-    {
-        switch (neighbour)
-        {
+    public Cell GetNeighbour(Neighbour neighbour) {
+        switch (neighbour) {
             case NORTH:
                 return northNeighbour;
             case SOUTH:

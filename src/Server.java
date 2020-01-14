@@ -10,6 +10,10 @@ import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+/**
+ * manages player registration
+ * handles the communication from client to server
+ */
 public class Server {
 
     private ServerSocket server;
